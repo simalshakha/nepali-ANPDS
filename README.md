@@ -27,9 +27,7 @@ NLPR/
 │   ├── pd-traific/      # Plate detection model
 │   ├── sg/              # Segmentation model
 │   └── char-traiffic/   # Character recognition model
-├
-├── .python-version
-└── pyproject.toml       # Project dependencies and metadata
+
 ```
 
 ## 🚀 Installation
