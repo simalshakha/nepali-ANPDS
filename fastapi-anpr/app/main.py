@@ -34,13 +34,13 @@ except Exception as e:
 # FastAPI app
 app = FastAPI()
 
-# Static and Templates
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
 templates = Jinja2Templates(directory="templates")
 templates.env.filters["to_base64"] = to_base64
 templates.env.globals.update(zip=zip)
 
-@app.get("/", response_class=HTMLResponse)
+@app.get("/", response_class=HTMLResponse, name="upload_file_route")
 async def upload_form(request: Request):
     return templates.TemplateResponse("upload.html", {"request": request})
 
