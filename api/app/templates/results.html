@@ -1,94 +1,161 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ANPR Results</title>
-    <style>
-        body { font-family: sans-serif; line-height: 1.6; padding: 20px; max-width: 1200px; margin: auto; }
-        h1, h2 { border-bottom: 1px solid #eee; padding-bottom: 5px; }
-        .result-item { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px; background-color: #f9f9f9; }
-        .result-item h3 { margin-top: 0; }
-        .plate-images, .char-details { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px; }
-        .plate-images img, .char-details .char-item img { max-width: 100%; height: auto; border: 1px solid #ddd; max-height: 80px; } /* Control image size */
-        .plate-images div, .char-details .char-item { text-align: center; }
-        .plate-images div span, .char-details .char-item span { display: block; font-size: 0.9em; margin-top: 5px; color: #555; }
-        .final-text { font-size: 1.4em; font-weight: bold; color: #0056b3; margin-top: 10px; }
-        .char-item { border: 1px solid #eee; padding: 5px; background-color: white; }
-        .char-item .char-pred { font-size: 1.2em; font-weight: bold; }
-        .char-item .char-conf { font-size: 0.8em; color: green; }
-        .error-item { border: 1px solid red; background-color: #fdd; padding: 10px; }
-         a { color: #007bff; text-decoration: none;}
-         a:hover { text-decoration: underline;}
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ANPR Results</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+     
+      padding: 2rem;
+      color: #222;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 1000px;
+      margin: auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      backdrop-filter: blur(8px);
+    }
+    h1 {
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .result-item {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .result-item.error-item {
+      border-color: #ef4444;
+      background-color: #fee2e2;
+    }
+    .result-item h3 {
+      margin-top: 0;
+      color: #111;
+    }
+    .final-text {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #1e40af;
+      margin-top: 0.5rem;
+    }
+    .plate-images, .char-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .plate-images div, .char-item {
+      background: #f3f4f6;
+      padding: 0.5rem;
+      border-radius: 6px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+    .plate-images img, .char-item img {
+      max-height: 90px;
+      width: auto;
+      border-radius: 4px;
+    }
+    .char-pred {
+      font-weight: bold;
+      font-size: 1rem;
+    }
+    .char-conf {
+      font-size: 0.8rem;
+      color: #059669;
+    }
+    .coordinates {
+      font-size: 0.7rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
 <body>
-    <h1>AProcessing Results</h1>
+  <div class="container">
+    <h1>📸 ANPR Processing Results</h1>
     <p>File: <strong>{{ filename }}</strong></p>
-     <p><a href="{{ url_for('upload_file_route') }}">« Upload Another File</a></p>
+    <p><a href="{{ url_for('upload_file_route') }}">⬅ Upload Another File</a></p>
 
     {% if results %}
-        <h2>Detected Plates ({{ results | length }})</h2>
-        {% for result in results %}
-            {% if 'error' in result %}
-                <div class="result-item error-item">
-                    <h3>Error Processing Plate</h3>
-                    <p><strong>File:</strong> {{ result.get('filename', 'N/A') }}</p>
-                    <p><strong>Frame:</strong> {{ result.get('frame_number', 'N/A') }}, <strong>Index:</strong> {{ result.get('plate_index', 'N/A') }}</p>
-                    <p><strong>Error:</strong> {{ result.error }}</p>
-                    {% if result.original_plate %}
-                     <div>
-                        <span>Original Crop (if available):</span>
-                        <img src="{{ result.original_plate }}" alt="Original Plate Crop (Error)">
-                     </div>
-                    {% endif %}
-                </div>
-            {% else %}
-                <div class="result-item">
-                    <h3>Plate #{{ loop.index }} (Frame: {{ result.frame_number }}, Index: {{ result.plate_index }})</h3>
-                    <p>Plate Detection Confidence: {{ "%.2f"|format(result.confidence * 100) }}%</p>
-                    <div class="final-text">Recognized Text: {{ result.final_text if result.final_text else "[No Text Recognized]" }}</div>
-
-                    <h4>Plate Images:</h4>
-                    <div class="plate-images">
-                        <div>
-                            <span>Original Crop ({{ result.plate_dimensions.width }}x{{ result.plate_dimensions.height }})</span>
-                            <img src="{{ result.original_plate }}" alt="Original Plate {{ loop.index }}">
-                        </div>
-                        <div>
-                             <span>Deskewed ({{ result.deskewed_dimensions.width }}x{{ result.deskewed_dimensions.height }})</span>
-                            <img src="{{ result.deskewed_plate }}" alt="Deskewed Plate {{ loop.index }}">
-                        </div>
-                         <div>
-                            <span>Digital Recreation</span>
-                            <img src="{{ result.digital_plate }}" alt="Digital Plate {{ loop.index }}">
-                        </div>
-                    </div>
-
-                    {% if result.characters %}
-                        <h4>Character Details:</h4>
-                        <div class="char-details">
-                            {% for char in result.characters %}
-                                <div class="char-item">
-                                    <span class="char-pred">{{ char.prediction }}</span>
-                                    <img src="{{ char.image }}" alt="Char '{{ char.prediction }}'">
-                                    <span class="char-conf">Conf: {{ "%.1f"|format(char.confidence * 100) }}%</span>
-                                    <span style="font-size: 0.7em;">({{char.x1}},{{char.y1}})-({{char.x2}},{{char.y2}})</span>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                         <p>No characters were recognized for this plate.</p>
-                    {% endif %}
-                </div>
+      <h2>Detected Plates ({{ results | length }})</h2>
+      {% for result in results %}
+        {% if 'error' in result %}
+          <div class="result-item error-item">
+            <h3>❌ Error Processing Plate</h3>
+            <p><strong>File:</strong> {{ result.get('filename', 'N/A') }}</p>
+            <p><strong>Frame:</strong> {{ result.get('frame_number', 'N/A') }}, <strong>Index:</strong> {{ result.get('plate_index', 'N/A') }}</p>
+            <p><strong>Error:</strong> {{ result.error }}</p>
+            {% if result.original_plate %}
+              <div>
+                <span>Original Crop:</span><br />
+                <img src="{{ result.original_plate }}" alt="Original Plate Crop (Error)">
+              </div>
             {% endif %}
-        {% endfor %}
+          </div>
+        {% else %}
+          <div class="result-item">
+            <h3>✅ Plate #{{ loop.index }} (Frame: {{ result.frame_number }}, Index: {{ result.plate_index }})</h3>
+            <p>Confidence: {{ "%.2f"|format(result.confidence * 100) }}%</p>
+            <div class="final-text">Text: {{ result.final_text if result.final_text else "[No Text Recognized]" }}</div>
+
+            <h4>Plate Views</h4>
+            <div class="plate-images">
+              <div>
+                <span>Original ({{ result.plate_dimensions.width }}x{{ result.plate_dimensions.height }})</span>
+                <img src="{{ result.original_plate }}" alt="Original Plate">
+              </div>
+              <div>
+                <span>Deskewed ({{ result.deskewed_dimensions.width }}x{{ result.deskewed_dimensions.height }})</span>
+                <img src="{{ result.deskewed_plate }}" alt="Deskewed Plate">
+              </div>
+              <div>
+                <span>Digital Recreation</span>
+                <img src="{{ result.digital_plate }}" alt="Digital Plate">
+              </div>
+            </div>
+
+            {% if result.characters %}
+              <h4>Character Breakdown</h4>
+              <div class="char-details">
+                {% for char in result.characters %}
+                  <div class="char-item">
+                    <span class="char-pred">{{ char.prediction }}</span><br />
+                    <img src="{{ char.image }}" alt="Char {{ char.prediction }}">
+                    <span class="char-conf">Conf: {{ "%.1f"|format(char.confidence * 100) }}%</span><br />
+                    <span class="coordinates">({{char.x1}},{{char.y1}})-({{char.x2}},{{char.y2}})</span>
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <p>No characters were recognized for this plate.</p>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
     {% else %}
-        <h2>No Plates Detected</h2>
-        <p>No license plates were found in the uploaded file: {{ filename }}</p>
+      <h2>No Plates Detected</h2>
+      <p>No license plates were found in the uploaded file: {{ filename }}</p>
     {% endif %}
 
-     <p style="margin-top: 30px;"><a href="{{ url_for('upload_file_route') }}">« Upload Another File</a></p>
-
+    <p style="text-align: center; margin-top: 2rem;"><a href="{{ url_for('upload_file_route') }}">⬅ Upload Another File</a></p>
+  </div>
 </body>
 </html>
