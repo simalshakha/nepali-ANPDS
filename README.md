@@ -23,10 +23,10 @@ NLPR/
 │   ├── image_processing.py  # Image processing pipeline
 │   ├── templates/       # HTML templates
 │   └── static/          # Static assets (CSS, JS, images)
-├── Notebooks/              # Machine learning models
-│   ├── pd-traific/      # Plate detection model
-│   ├── sg/              # Segmentation model
-│   └── char-traiffic/   # Character recognition model
+└── Notebooks/              # Machine learning models
+    ├── pd-traific/      # Plate detection model
+    ├── sg/              # Segmentation model
+    └── char-traiffic/   # Character recognition model
 
 ```
 
@@ -37,7 +37,7 @@ This project uses [UV](https://github.com/astral-sh/uv), an extremely fast Pytho
 ### Prerequisites
 
 1. Python 3.10 or higher
-2. [UV](https://github.com/astral-sh/uv) installed on your system
+
 
 ### Clone the Repository
 
@@ -49,10 +49,10 @@ cd NLPR
 ### Install Dependencies with UV
 
 ```bash
-uv sync
+pip install -r requirements.txt
 ```
 
-This will install all dependencies defined in the `pyproject.toml` file.
+This will install all dependencies defined in the `requirements.txt` file.
 
 ## 🏃 Running the Application
 
