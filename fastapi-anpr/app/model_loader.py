@@ -2,8 +2,8 @@ import os
 import logging
 import torch
 from ultralytics import YOLO
+import config
 
-import app.config as config
 from models import NepaliPlateCNN
 
 def check_file_exists(path, file_description):

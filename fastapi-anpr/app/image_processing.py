@@ -3,7 +3,7 @@ import os
 import logging
 import time
 
-import app.config as config
+import config
 from utils import to_base64
 from character_processing import deskew_plate, process_and_order_characters, create_digital_plate
 

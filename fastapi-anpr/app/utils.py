@@ -8,7 +8,7 @@ import torch
 import logging
 
 import os
-import app.config as config 
+import config 
 
 def to_base64(image_pil):
     if not isinstance(image_pil, Image.Image):
