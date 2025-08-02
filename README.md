@@ -17,22 +17,17 @@ The system is deployed as a Fastapi web application for easy interaction.
 ```
 NLPR/
 ├── app/          # Fastapi web application
-│   ├── main.py           # Main Flask application
-│   ├── config.py        # Application configuration
-│   ├── model_loader.py  # Model loading utilities
-│   ├── image_processing.py  # Image processing pipeline
-│   ├── templates/       # HTML templates
-│   └── static/          # Static assets (CSS, JS, images)
-└── Notebooks/              # Machine learning models
-    ├── pd-traific/      # Plate detection model
-    ├── sg/              # Segmentation model
-    └── char-traiffic/   # Character recognition model
+    ├── main.py           # Main Flask application
+    ├── config.py        # Application configuration
+    ├── model_loader.py  # Model loading utilities
+    ├── image_processing.py  # Image processing pipeline
+    ├── templates/       # HTML templates
+    └── static/          # Static assets (CSS, JS, images)
+
 
 ```
 
-## 🚀 Installation
 
-This project uses [UV](https://github.com/astral-sh/uv), an extremely fast Python package and project manager written in Rust. Follow these steps to set up the project:
 
 ### Prerequisites
 
