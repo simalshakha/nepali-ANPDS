@@ -10,7 +10,7 @@ import time
 import logging
 
 import config
-from model_loader import load_models
+from api.app.loader import load_models
 from image_processing import process_file
 from utils import to_base64
 
