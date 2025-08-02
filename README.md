@@ -15,7 +15,7 @@ The system is deployed as a Fastapi web application for easy interaction.
 ## 📂 Project Structure
 
 ```
-NLPR/
+api/
 ├── app/          # Fastapi web application
     ├── main.py           # Main Fastapi application
     ├── config.py        # Application configuration
