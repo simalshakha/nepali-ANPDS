@@ -59,7 +59,7 @@ This will install all dependencies defined in the `requirements.txt` file.
 Start the Fastapi application:
 
 ```bash
-cd application
+cd api
 uvicorn main:app --reload --port 5001
 ```
 
