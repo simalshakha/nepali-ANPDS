@@ -12,21 +12,6 @@ This project implements a complete ANPR pipeline:
 
 The system is deployed as a Fastapi web application for easy interaction.
 
-## 📂 Project Structure
-
-```
-api/
-├── app/          # Fastapi web application
-    ├── main.py           # Main Fastapi application
-    ├── config.py        # Application configuration
-    ├── model_loader.py  # Model loading utilities
-    ├── image_processing.py  # Image processing pipeline
-    ├── templates/       # HTML templates
-    └── static/          # Static assets (CSS, JS, images)
-
-
-```
-
 
 
 ### Prerequisites
